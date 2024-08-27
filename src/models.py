@@ -26,7 +26,6 @@ class User(Base):
 class Post(Base):
     __tablename__ = 'post'        
     id = Column(Integer, primary_key=True)
-    is_story = Column(Boolean, nullable=False)
     is_reel = Column(Boolean,  nullable=False)
     is_sensitivecontent = Column(Boolean,  nullable=False)
     is_highlighted = Column(Boolean,  nullable=False)
@@ -45,7 +44,16 @@ class Source(Base):
     size = Column(String(250),nullable=False)
     duration = Column(Integer,nullable=False)
     posts = relationship('Post',backref='source',lazy=True)
+    stories = relationship('Story',backref='source',lazy=True)
 
+class Story(Base):
+    __tablename__ = 'story'
+    id = Column(Integer, primary_key=True)
+    location = Column(String(250), nullable=False)
+    description = Column(String(250),nullable=False)
+    tag_id = Column(Integer,ForeignKey('tag.id'))
+    source_id = Column(Integer,ForeignKey('source.id'))
+    
 class Backgroundsong(Base):
     __tablename__ = 'backgroundsong'        
     id = Column(Integer, primary_key=True)    
@@ -60,6 +68,7 @@ class Tag(Base):
     id = Column(Integer, primary_key=True)    
     user_id = Column(Integer,ForeignKey('user.id'))
     post_id = Column(Integer, ForeignKey('post.id'))
+    stories = relationship('Story',backref='tag',lazy=True)
 
 class ChangeUsername(Base):
     __tablename__ = 'changeusername'
